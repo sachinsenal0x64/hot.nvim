@@ -41,7 +41,7 @@ Install the plugin with your preferred package manager:
 
     {
       'sachinsenal0x64/hot.nvim',
-      config = function()
+       config = function()
         local opts = require('hot.params').opts
 
         -- Update the Lualine Status
