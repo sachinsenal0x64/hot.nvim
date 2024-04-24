@@ -343,6 +343,17 @@ local function silent()
 				end,
 			})
 		end, 500) -- Defer the function call by 500ms to allow for any pending operations
+
+		-- Reload on Save
+		vim.api.nvim_create_autocmd("BufWritePost", {
+			pattern = lan["pattern"],
+			callback = function()
+				if job_id and vim.fn.jobwait({ job_id }, 0)[1] == -1 then
+					close_output_buffer()
+					silent()
+				end
+			end,
+		})
 	end
 end
 
