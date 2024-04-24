@@ -139,6 +139,7 @@ local function find_main_file(directory, extensions)
 end
 
 local function restart()
+	restart()
 	if job_id then
 		vim.fn.jobstop(job_id)
 		job_id = nil
