@@ -132,20 +132,15 @@ local function restart()
 	local lan
 
 	if type(opts.set.languages) == "table" then
-		-- Get the current file extension
-		local current_file = vim.fn.expand("%:t")
-		local current_extension = current_file:match("^.+%.(.+)$")
-
-		-- Search for language configuration based on the current extension
 		for lang, lang_config in pairs(opts.set.languages) do
-			if type(lang_config) == "table" and lang_config.ext == current_extension then
+			if type(lang_config) == "table" then
 				lan = lang_config -- Assign lang_config to lan
-				break
+			else
+				print("Error: Missing field for language", lang)
 			end
 		end
 	else
 		print("Error: opts.set.languages is not a table")
-		return
 	end
 
 	-- Check if lan is still accessible here
@@ -160,6 +155,15 @@ local function restart()
 			return
 		end
 		vim.cmd("write")
+		local file_extension = vim.fn.expand("%:e") -- Get the extension of the current file
+		-- Get the extension corresponding to the current file type
+		local lang_extension = lan.ext[file_extension]
+
+		if not lang_extension then
+			vim.notify("Extension not configured for current file type", vim.log.levels.ERROR)
+			return
+		end
+
 		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
 		-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
@@ -184,8 +188,6 @@ local function restart()
 				end,
 			})
 		end, 500)
-	else
-		print("Error: Language configuration not found for the current file type")
 	end
 end -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
