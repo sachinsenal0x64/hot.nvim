@@ -185,7 +185,6 @@ end
 
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
-	directory = directory or "." -- Default to current directory if not provided
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
 		if vim.fn.isdirectory(path) == 1 then
@@ -198,8 +197,6 @@ local function find_test_file(directory, extensions)
 			-- Check if the file name matches any of the extensions
 			for _, ext in ipairs(extensions) do
 				if file:match("_test" .. ext .. "$") then
-					return path
-				elseif file:match("test_" .. ext .. "$") then
 					return path
 				end
 			end
@@ -251,7 +248,7 @@ local function test_restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan["test"] .. "", {
+			job_id = vim.fn.jobstart(lan["test"] .. " ", {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
