@@ -251,7 +251,7 @@ local function test_restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan["test"] .. "" .. file, {
+			job_id = vim.fn.jobstart(lan["test"] .. "", {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
@@ -305,7 +305,6 @@ local function silent()
 			local root_dir = vim.fn.getcwd()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
-			vim.notify(lan["ext"])
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 				return
