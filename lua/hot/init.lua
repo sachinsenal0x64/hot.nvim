@@ -181,6 +181,7 @@ local function restart()
 		end, 500)
 	end
 end
+
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
 	for _, file in ipairs(vim.fn.readdir(directory)) do
@@ -211,18 +212,20 @@ local function test_restart()
 		job_id = nil
 	end
 
-	local lan
+	local filetype = vim.bo.filetype -- Get the current buffer's filetype
+	local lan = nil -- Initialize lan to nil
 
 	if type(opts.set.languages) == "table" then
-		for lang, lang_config in pairs(opts.set.languages) do
-			if type(lang_config) == "table" then
-				lan = lang_config -- Assign lang_config to lan
-			else
-				print("Error: Missing field for language", lang)
-			end
+		-- Check if there is a language configuration for the current filetype
+		if opts.set.languages[filetype] then
+			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
+		else
+			print("Error: Language configuration not found for filetype", filetype)
+			return
 		end
 	else
 		print("Error: opts.set.languages is not a table")
+		return
 	end
 
 	if lan then
@@ -298,7 +301,7 @@ local function silent()
 			local root_dir = vim.fn.getcwd()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan.ext)
-
+			vim.notify(main_file)
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 				return
