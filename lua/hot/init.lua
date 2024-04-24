@@ -139,8 +139,8 @@ local function find_main_file(directory, extensions)
 end
 
 local function restart()
-	close_output_buffer()
 	if job_id then
+		close_output_buffer()
 		vim.fn.jobstop(job_id)
 		job_id = nil
 	end
@@ -345,6 +345,34 @@ local function silent()
 		end, 500) -- Defer the function call by 500ms to allow for any pending operations
 	end
 end
+
+-- Function to set up autocmd for silent restart on file write
+local function setup_autosave_autocmd(pattern)
+	vim.api.nvim_create_autocmd("BufWritePost", {
+		pattern = pattern,
+		callback = function()
+			if job_id and vim.fn.jobwait({ job_id }, 0)[1] == -1 then
+				close_output_buffer()
+				silent()
+			end
+		end,
+	})
+end
+
+-- Function to set up autosave autocmd
+local function autosave()
+	local filetype = vim.bo.filetype -- Get the current buffer's filetype
+	local lan = opts.set.languages[filetype] -- Get the language configuration for the filetype
+
+	if lan then
+		setup_autosave_autocmd(lan["pattern"])
+	else
+		vim.notify("Language configuration not found for filetype " .. filetype, vim.log.levels.ERROR)
+	end
+end
+
+-- Call the function to set up autosave autocmd
+autosave()
 
 return {
 	restart = restart,
