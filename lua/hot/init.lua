@@ -21,22 +21,22 @@ local function output_to_buffer(data, is_error)
 		lines = { data }
 	end
 
+	-- Attempt to set lines in buffer
+	local success, err = pcall(function()
+		for _, line in ipairs(lines) do
+			vim.api.nvim_buf_set_lines(output_buf, -1, -1, false, { line })
+		end
+	end)
+
+	-- Check if there was an error
+	if not success then
+		print("Error setting lines in output buffer:", err)
+	end
+
 	-- If it's an error, print each line separately
 	if is_error then
 		for _, line in ipairs(lines) do
 			print(line)
-		end
-	else
-		-- Attempt to set lines in buffer
-		local success, err = pcall(function()
-			for _, line in ipairs(lines) do
-				vim.api.nvim_buf_set_lines(output_buf, -1, -1, false, { line })
-			end
-		end)
-
-		-- Check if there was an error
-		if not success then
-			print("Error setting lines in output buffer:", err)
 		end
 	end
 end
