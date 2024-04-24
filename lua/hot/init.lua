@@ -30,7 +30,7 @@ local function output_to_buffer(data, is_error)
 
 	-- Check if there was an error
 	if not success then
-		print("Error setting lines in output buffer:", err)
+		print("")
 	end
 
 	-- If it's an error, print each line separately
