@@ -26,6 +26,7 @@
 - Multiple Languages & Unittest Reloader on the fly
 - Start | Stop | Silent | Real Time Debug | Buffer Open / Close  Reload on Auto Save
 - Notifications
+- Custom Healthchecker
 - Lualine (Status Bar) Plugin
 
   <br>
