@@ -12,7 +12,6 @@
 ---@field test string
 ---@field test_done string
 ---@field test_fail string
----@field langs string[]
 ---@field custom_file string
 
 ---@type Options
@@ -47,10 +46,6 @@ local opts = {
 		test = "🧪",
 		test_done = "🧪.✅",
 		test_fail = "🧪.❌",
-		langs = {
-			"python",
-			"go",
-		},
 		custom_file = "index",
 	},
 }
