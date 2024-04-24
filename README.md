@@ -41,15 +41,11 @@ Install the plugin with your preferred package manager:
 
     {
       'sachinsenal0x64/hot.nvim',
-       config = function()
+      config = function()
         local opts = require('hot.params').opts
 
         -- Update the Lualine Status
-
         Reloader = opts.tweaks.default
-
-        -- You need a global variable if you want to use the Lualine Status
-
         Reloader = '🧼'
 
         opts.tweaks.start = '🚀'
@@ -57,48 +53,39 @@ Install the plugin with your preferred package manager:
         opts.tweaks.test = '🧪'
         opts.tweaks.test_done = '🧪.✅'
         opts.tweaks.test_fail = '🧪.❌'
-        opts.tweaks.langs = {
-		"python",
-                "go",
-        },
+        opts.tweaks.langs = { 'python', 'go' }
 
-        --- If the 'main.*' file doesn't exist, it will fall back to 'index.*'
-
-        custom_file = "index",
-        
+        -- If the 'main.*' file doesn't exist, it will fall back to 'index.*'
+        opts.tweaks.custom_file = 'index'
 
         -- Add Languages
-
         opts.set.languages.python = {
-    				cmd = "python3",
-    				desc = "Run Python file asynchronously",
-    				kill_desc = "Kill the running Python file",
-    				emoji = "🐍",
-    				test = "python -m unittest",
-    				ext = { ".py" },
-    				pattern = { "*.py" },
-    			},
-    
+          cmd = 'python3',
+          desc = 'Run Python file asynchronously',
+          kill_desc = 'Kill the running Python file',
+          emoji = '🐍',
+          test = 'python -m unittest',
+          ext = { '.py' },
+          pattern = { '*.py' },
+        }
+
         opts.set.languages.go = {
-    				cmd = "go run",
-    				desc = "Run Go file asynchronously",
-    				kill_desc = "Kill the running Go file",
-    				emoji = "🐹",
-    				test = "go test",
-    				ext = { ".go" },
-    				pattern = { "*.go" },
-    			},
+          cmd = 'go run',
+          desc = 'Run Go file asynchronously',
+          kill_desc = 'Kill the running Go file',
+          emoji = '🐹',
+          test = 'go test',
+          ext = { '.go' },
+          pattern = { '*.go' },
+        }
 
         -- Thot Health Check
-
         vim.api.nvim_set_keymap('n', 'ho', '<Cmd>lua require("thot").check()<CR>', { noremap = true, silent = true })
 
         -- Keybinds
 
         -- Start
-
         vim.api.nvim_set_keymap('n', '<F3>', '<Cmd>lua require("hot").restart()<CR>', { noremap = true, silent = true })
-
       end,
     },
 
