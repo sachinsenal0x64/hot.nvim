@@ -135,7 +135,7 @@ local function restart()
 	if type(opts.set.languages) == "table" then
 		for lang, lang_config in pairs(opts.set.languages) do
 			if type(lang_config) == "table" then
-				lan = lang_config.ext
+				lan = lang_config -- Assign lang_config to lan
 			else
 				print("Error: Missing field for language", lang)
 			end
@@ -148,8 +148,14 @@ local function restart()
 	if lan then
 		-- Get the root directory of the project
 		local root_dir = vim.fn.getcwd()
+
+		-- Get the current file type
+		local filetype = vim.bo.filetype
+		-- Get the extensions based on the current file type
+		local extensions = lan[filetype]
+
 		-- Find the main file in the root directory and its subdirectories
-		local main_file = find_main_file(root_dir, lan.ext)
+		local main_file = find_main_file(root_dir, extensions)
 
 		if not main_file then
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
@@ -182,7 +188,6 @@ local function restart()
 		end, 500)
 	end
 end
-
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
 	for _, file in ipairs(vim.fn.readdir(directory)) do
