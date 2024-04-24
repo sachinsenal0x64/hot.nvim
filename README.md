@@ -93,11 +93,10 @@ Install the plugin with your preferred package manager:
         -- Test
         vim.api.nvim_set_keymap('n', '<F6>', '<Cmd>lua require("hot").test_restart()<CR>', { noremap = true, silent = true })
         -- Close Buffer
-        vim.api.nvim_set_keymap('n', '<F7>', '<Cmd>lua require("hot").close_output_buffer()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<F8>', '<Cmd>lua require("hot").close_output_buffer()<CR>', { noremap = true, silent = true })
         -- Open Buffer
-        vim.api.nvim_set_keymap('n', '<F6>', '<Cmd>lua require("hot").open_output_buffer()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '<F7>', '<Cmd>lua require("hot").open_output_buffer()<CR>', { noremap = true, silent = true })
 
-      
       end,
     },
 
