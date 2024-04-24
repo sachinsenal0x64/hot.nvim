@@ -3,7 +3,7 @@
 ---@field tweaks  TWEAK
 
 ---@class LANG
----@field languages string[]
+---@field languages table
 
 ---@class TWEAK
 ---@field default string

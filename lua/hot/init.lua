@@ -4,65 +4,6 @@ local job_id = nil
 local output_buf = nil
 local output_win = nil
 
--- Define the function to handle the F5 key press for stopping a running job
-local function stop()
-	local lan
-
-	if type(opts.set.languages) == "table" then
-		for lang, lang_config in pairs(opts.set.languages) do
-			if type(lang_config) == "table" then
-				lan = lang_config -- Assign lang_config to lan
-			else
-				print("Error: Missing field for language", lang)
-			end
-		end
-	else
-		print("Error: opts.set.languages is not a table")
-	end
-
-	if not job_id then
-		vim.notify(lan.emoji .. " No script is running.", vim.log.levels.INFO)
-		return
-	end
-
-	-- Stop the job if it's running
-	vim.fn.jobstop(job_id)
-	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
-	Reloader = opts.tweaks.stop
-	job_id = nil
-
-	-- Close the output window if it's still valid and open
-	if output_win and vim.api.nvim_win_is_valid(output_win) then
-		vim.api.nvim_win_close(output_win, true)
-	end
-end
-
--- Function to open the output buffer in a floating window
-local function open_output_buffer()
-	-- Check if the buffer is still valid or if it needs to be created
-	if not output_buf or not vim.api.nvim_buf_is_valid(output_buf) then
-		-- Create a new buffer that is not listed and not loaded into memory when deleted
-		output_buf = vim.api.nvim_create_buf(false, true)
-		-- Calculate window dimensions as a percentage of the total screen size
-		local win_height = math.floor(vim.api.nvim_get_option("lines") * 0.3) -- 30% of available height
-		local win_width = math.floor(vim.api.nvim_get_option("columns") * 0.8) -- 80% of available width
-
-		-- Calculate and set window position and create the window
-		output_win = vim.api.nvim_open_win(output_buf, true, {
-			relative = "editor",
-			width = win_width,
-			height = win_height,
-			row = vim.api.nvim_get_option("lines") - win_height - 1,
-			col = 10,
-			style = "minimal",
-			border = "rounded",
-		})
-		-- Set specific window options
-		vim.api.nvim_win_set_option(output_win, "wrap", false)
-		vim.api.nvim_buf_set_option(output_buf, "bufhidden", "wipe")
-	end
-end
-
 local function output_to_buffer(data, is_error)
 	if not data or #data == 0 then
 		return
@@ -97,6 +38,66 @@ local function close_output_buffer()
 		output_buf = nil
 	end
 	vim.notify("🤏 Buffer Closed", vim.log.levels.INFO)
+end
+
+-- Define the function to handle the F5 key press for stopping a running job
+local function stop()
+	local lan
+
+	if type(opts.set.languages) == "table" then
+		for lang, lang_config in pairs(opts.set.languages) do
+			if type(lang_config) == "table" then
+				lan = lang_config -- Assign lang_config to lan
+			else
+				print("Error: Missing field for language", lang)
+			end
+		end
+	else
+		print("Error: opts.set.languages is not a table")
+	end
+
+	if not job_id then
+		vim.notify(lan.emoji .. " No script is running.", vim.log.levels.INFO)
+		return
+	end
+
+	-- Stop the job if it's running
+	vim.fn.jobstop(job_id)
+	close_output_buffer()
+	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
+	Reloader = opts.tweaks.stop
+	job_id = nil
+
+	-- Close the output window if it's still valid and open
+	if output_win and vim.api.nvim_win_is_valid(output_win) then
+		vim.api.nvim_win_close(output_win, true)
+	end
+end
+
+-- Function to open the output buffer in a floating window
+local function open_output_buffer()
+	-- Check if the buffer is still valid or if it needs to be created
+	if not output_buf or not vim.api.nvim_buf_is_valid(output_buf) then
+		-- Create a new buffer that is not listed and not loaded into memory when deleted
+		output_buf = vim.api.nvim_create_buf(false, true)
+		-- Calculate window dimensions as a percentage of the total screen size
+		local win_height = math.floor(vim.api.nvim_get_option("lines") * 0.3) -- 30% of available height
+		local win_width = math.floor(vim.api.nvim_get_option("columns") * 0.8) -- 80% of available width
+
+		-- Calculate and set window position and create the window
+		output_win = vim.api.nvim_open_win(output_buf, true, {
+			relative = "editor",
+			width = win_width,
+			height = win_height,
+			row = vim.api.nvim_get_option("lines") - win_height - 1,
+			col = 10,
+			style = "minimal",
+			border = "rounded",
+		})
+		-- Set specific window options
+		vim.api.nvim_win_set_option(output_win, "wrap", false)
+		vim.api.nvim_buf_set_option(output_buf, "bufhidden", "wipe")
+	end
 end
 
 -- Recursive function to search for the main file in the directory and its subdirectories
@@ -245,7 +246,7 @@ local function test_restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan.test .. " ", {
+			job_id = vim.fn.jobstart(lan.test .. "", {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
