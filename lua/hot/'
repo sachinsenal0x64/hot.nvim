@@ -138,8 +138,6 @@ local function restart()
 		if opts.set.languages[filetype] then
 			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
 		else
-			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-
 			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
@@ -224,7 +222,6 @@ local function test_restart()
 		else
 			vim.notify("Test file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 
-			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
 	else
@@ -290,8 +287,6 @@ local function silent()
 		if opts.set.languages[filetype] then
 			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
 		else
-			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-
 			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
