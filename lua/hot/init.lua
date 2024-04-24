@@ -359,7 +359,7 @@ local function setup_autosave_autocmd(pattern)
 	})
 end
 
--- Function to set up autosave autocmd
+-- Reload on Save
 local function autosave()
 	local filetype = vim.bo.filetype -- Get the current buffer's filetype
 	local lan = opts.set.languages[filetype] -- Get the language configuration for the filetype
@@ -371,6 +371,10 @@ local function autosave()
 	end
 end
 
+-- Call the function to set up autosave autocmd
+
+autosave()
+
 return {
 	restart = restart,
 	open_output_buffer = open_output_buffer,
@@ -378,5 +382,4 @@ return {
 	test_restart = test_restart,
 	stop = stop,
 	silent = silent,
-	autosave = autosave,
 }
