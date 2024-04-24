@@ -212,7 +212,7 @@ local function find_test_file(directory, extensions)
 			for _, ext in ipairs(extensions) do
 				if file:match("_test" .. ext .. "$") then
 					return path
-				elseif file:match("_test_" .. ext .. "$") then
+				elseif file:match("test_" .. ext .. "$") then
 					return path
 				end
 			end
