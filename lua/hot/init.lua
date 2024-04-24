@@ -130,18 +130,20 @@ local function restart()
 		job_id = nil
 	end
 
-	local lan
+	local filetype = vim.bo.filetype -- Get the current buffer's filetype
+	local lan = nil -- Initialize lan to nil
 
 	if type(opts.set.languages) == "table" then
-		for lang, lang_config in pairs(opts.set.languages) do
-			if type(lang_config) == "table" then
-				lan = lang_config -- Assign lang_config to lan
-			else
-				print("Error: Missing field for language", lang)
-			end
+		-- Check if there is a language configuration for the current filetype
+		if opts.set.languages[filetype] then
+			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
+		else
+			print("Error: Language configuration not found for filetype", filetype)
+			return
 		end
 	else
 		print("Error: opts.set.languages is not a table")
+		return
 	end
 
 	-- Check if lan is still accessible here
@@ -155,10 +157,11 @@ local function restart()
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 			return
 		end
+
 		vim.cmd("write")
 		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
-		-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
+		-- Set up the job to execute the script
 		Reloader = opts.tweaks.start
 		open_output_buffer()
 
@@ -172,17 +175,12 @@ local function restart()
 				end,
 				on_exit = function(_, code)
 					job_id = nil
-					--   if code > 0 then
-					--     vim.notify(lang.emoji .. ' Script exited with code ' .. code, vim.log.levels.WARN)
-					--   else
-					-- vim.notify(lang.emoji .. ' Script executed successfully', vim.log.levels.INFO)
-					--   end
+					-- Handle job exit if needed
 				end,
 			})
 		end, 500)
 	end
 end
-
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
 	for _, file in ipairs(vim.fn.readdir(directory)) do
