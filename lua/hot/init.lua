@@ -111,13 +111,6 @@ local function find_main_file(directory, extensions)
 			if main_file then
 				return main_file
 			end
-		else
-			-- Check if the file name matches any of the extensions
-			for _, ext in ipairs(extensions) do
-				if file == "main" .. ext then
-					return path
-				end
-			end
 		end
 	end
 end
