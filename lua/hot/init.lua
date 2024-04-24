@@ -140,7 +140,6 @@ local function restart()
 		else
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 
-			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
 	else
@@ -224,7 +223,6 @@ local function test_restart()
 		else
 			vim.notify("Test file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 
-			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
 	else
@@ -292,7 +290,6 @@ local function silent()
 		else
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 
-			print("Error: Language configuration not found for filetype", filetype)
 			return
 		end
 	else
