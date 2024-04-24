@@ -152,6 +152,7 @@ local function restart()
 		local root_dir = vim.fn.getcwd()
 		-- Find the main file in the root directory and its subdirectories
 		local main_file = find_main_file(root_dir, lan.ext)
+		print(lan.ext)
 
 		if not main_file then
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
