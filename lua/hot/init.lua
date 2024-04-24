@@ -346,14 +346,6 @@ local function silent()
 	end
 end
 
--- Auto Save
-local function autosave_fly()
-	if job_id and vim.fn.jobwait({ job_id }, 0)[1] == -1 then
-		close_output_buffer()
-		silent()
-	end
-end
-
 return {
 	restart = restart,
 	open_output_buffer = open_output_buffer,
@@ -361,5 +353,4 @@ return {
 	test_restart = test_restart,
 	stop = stop,
 	silent = silent,
-	autosave_fly = autosave_fly,
 }
