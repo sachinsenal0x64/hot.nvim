@@ -152,7 +152,7 @@ local function restart()
 		-- Get the root directory of the project
 		local root_dir = vim.fn.getcwd()
 		-- Find the main file in the root directory and its subdirectories
-		local main_file = find_main_file(root_dir, lan.ext)
+		local main_file = find_main_file(root_dir, lan["ext"])
 
 		if not main_file then
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
@@ -167,7 +167,7 @@ local function restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan.cmd .. " " .. file, {
+			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
@@ -185,6 +185,7 @@ end
 
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
+	directory = directory or "." -- Default to current directory if not provided
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
 		if vim.fn.isdirectory(path) == 1 then
@@ -235,7 +236,7 @@ local function test_restart()
 		local root_dir = vim.fn.getcwd()
 
 		-- Find the test file in the root directory and its subdirectories
-		local test_file = find_test_file(root_dir, lan.ext)
+		local test_file = find_test_file(root_dir, lan["ext"])
 
 		if not test_file then
 			vim.notify("Test file not found in project directory or its subdirectories", vim.log.levels.ERROR)
@@ -250,7 +251,7 @@ local function test_restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan.test .. "", {
+			job_id = vim.fn.jobstart(lan["test"] .. "" .. file, {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
@@ -260,10 +261,10 @@ local function test_restart()
 				on_exit = function(_, code)
 					job_id = nil
 					if code > 0 then
-						vim.notify(lan.emoji .. " Script exited with code " .. code, vim.log.levels.WARN)
+						vim.notify(lan["emoji"] .. " Script exited with code " .. code, vim.log.levels.WARN)
 						Reloader = opts.tweaks.test_fail
 					else
-						vim.notify(lan.emoji .. " Script executed successfully", vim.log.levels.INFO)
+						vim.notify(lan["emoji"] .. " Script executed successfully", vim.log.levels.INFO)
 						Reloader = opts.tweaks.test_done
 					end
 				end,
@@ -303,8 +304,8 @@ local function silent()
 			-- Get the root directory of the project
 			local root_dir = vim.fn.getcwd()
 			-- Find the main file in the root directory and its subdirectories
-			local main_file = find_main_file(root_dir, lan.ext)
-			vim.notify(lan.ext)
+			local main_file = find_main_file(root_dir, lan["ext"])
+			vim.notify(lan["ext"])
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 				return
@@ -315,7 +316,7 @@ local function silent()
 
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
-			job_id = vim.fn.jobstart(lan.cmd .. " " .. file, {
+			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
 				on_stdout = function(_, data) end, -- No output handling
 				on_stderr = function(_, data) end, -- No output handling
 				on_exit = function(_, code)
