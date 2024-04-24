@@ -90,9 +90,9 @@ local function stop()
 	-- Stop the job if it's running
 	vim.fn.jobstop(job_id)
 	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
+	close_output_buffer()
 	Reloader = opts.tweaks.stop
 	job_id = nil
-	close_output_buffer()
 
 	-- Close the output window if it's still valid and open
 	if output_win and vim.api.nvim_win_is_valid(output_win) then
