@@ -117,6 +117,7 @@ local function find_main_file(directory, extensions)
 				if file == "main" .. ext then
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
+					return path
 				end
 			end
 		end
@@ -155,15 +156,6 @@ local function restart()
 			return
 		end
 		vim.cmd("write")
-		local file_extension = vim.fn.expand("%:e") -- Get the extension of the current file
-		-- Get the extension corresponding to the current file type
-		local lang_extension = lan.ext[file_extension]
-
-		if not lang_extension then
-			vim.notify("Extension not configured for current file type", vim.log.levels.ERROR)
-			return
-		end
-
 		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
 		-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
@@ -189,7 +181,9 @@ local function restart()
 			})
 		end, 500)
 	end
-end -- Define a function to find the main_test file
+end
+
+-- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
