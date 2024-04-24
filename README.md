@@ -28,4 +28,16 @@
 - Notifications
 - Lualine (Status Bar) Plugin
 
+  <br>
+  
+## 📦 Installation
+
+Install the plugin with your preferred package manager:
+
+### 💤 [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+
+
+```
 
