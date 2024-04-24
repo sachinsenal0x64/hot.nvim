@@ -37,7 +37,10 @@ Install the plugin with your preferred package manager:
 
 ### 💤 [lazy.nvim](https://github.com/folke/lazy.nvim)
 
+
 ```lua
+    -- Enable Current directory 
+    vim.opt.autochdir == true,
 
     {
       'sachinsenal0x64/hot.nvim',
