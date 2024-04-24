@@ -101,3 +101,5 @@ Install the plugin with your preferred package manager:
     },
 
 ```
+
+#### 🏆 Now you're ready to go! Hooray!
