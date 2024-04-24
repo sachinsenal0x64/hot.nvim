@@ -1,42 +1,43 @@
 local opts = require("hot.params").opts
 
 local job_id = nil
-local output_win = nil
 local output_buf = nil
-
-local function initialize_output_buf()
-	-- Check if output_buf is already initialized
-	if not output_buf or not vim.api.nvim_buf_is_valid(output_buf) then
-		-- Initialize output_buf
-		output_buf = vim.api.nvim_create_buf(false, true)
-		-- Additional configuration if needed
-	end
-end
+local output_win = nil
 
 local function output_to_buffer(data, is_error)
-	-- Ensure output_buf is initialized
-	initialize_output_buf()
-
-	-- Check if data is nil or empty
+	-- Check if data is provided
 	if not data or #data == 0 then
 		return
 	end
 
+	-- Initialize lines variable
 	local lines = {}
-	if is_error then
-		lines = { table.concat(data, " ") }
-	else
+
+	-- Check if data is already a table of lines
+	if type(data) == "table" then
 		lines = data
+	else
+		-- If data is a single string, split it into lines
+		lines = { data }
 	end
 
-	-- Attempt to set lines in buffer
-	local success, err = pcall(function()
-		vim.api.nvim_buf_set_lines(output_buf, -1, -1, false, lines)
-	end)
+	-- If it's an error, print each line separately
+	if is_error then
+		for _, line in ipairs(lines) do
+			print(line)
+		end
+	else
+		-- Attempt to set lines in buffer
+		local success, err = pcall(function()
+			for _, line in ipairs(lines) do
+				vim.api.nvim_buf_set_lines(output_buf, -1, -1, false, { line })
+			end
+		end)
 
-	-- Check if there was an error
-	if not success then
-		print("Error setting lines in output buffer:", err)
+		-- Check if there was an error
+		if not success then
+			print("Error setting lines in output buffer:", err)
+		end
 	end
 end
 
