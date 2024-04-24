@@ -112,10 +112,11 @@ local function find_main_file(directory, extensions)
 				return main_file
 			end
 		else
-			-- Check if the file name starts with "main" and ends with one of the extensions
+			-- Check if the file name matches any of the extensions
 			for _, ext in ipairs(extensions) do
-				if string.match(file, "^main%." .. ext .. "$") then
+				if file == "main" .. ext then
 					return path
+				elseif file == opts.tweaks.custom_file .. ext then
 				end
 			end
 		end
@@ -149,10 +150,6 @@ local function restart()
 		-- Find the main file in the root directory and its subdirectories
 		local main_file = find_main_file(root_dir, lan.ext)
 
-		if not main_file then
-			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-			return
-		end
 		vim.cmd("write")
 		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
