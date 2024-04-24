@@ -40,40 +40,6 @@ local function close_output_buffer()
 	vim.notify("🤏 Buffer Closed", vim.log.levels.INFO)
 end
 
--- Define the function to handle the F5 key press for stopping a running job
-local function stop()
-	local lan
-
-	if type(opts.set.languages) == "table" then
-		for lang, lang_config in pairs(opts.set.languages) do
-			if type(lang_config) == "table" then
-				lan = lang_config -- Assign lang_config to lan
-			else
-				print("Error: Missing field for language", lang)
-			end
-		end
-	else
-		print("Error: opts.set.languages is not a table")
-	end
-
-	if not job_id then
-		vim.notify(lan.emoji .. " No script is running.", vim.log.levels.INFO)
-		return
-	end
-
-	-- Stop the job if it's running
-	vim.fn.jobstop(job_id)
-	close_output_buffer()
-	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
-	Reloader = opts.tweaks.stop
-	job_id = nil
-
-	-- Close the output window if it's still valid and open
-	if output_win and vim.api.nvim_win_is_valid(output_win) then
-		vim.api.nvim_win_close(output_win, true)
-	end
-end
-
 -- Function to open the output buffer in a floating window
 local function open_output_buffer()
 	-- Check if the buffer is still valid or if it needs to be created
@@ -97,6 +63,40 @@ local function open_output_buffer()
 		-- Set specific window options
 		vim.api.nvim_win_set_option(output_win, "wrap", false)
 		vim.api.nvim_buf_set_option(output_buf, "bufhidden", "wipe")
+	end
+end
+
+-- Define the function to handle the F5 key press for stopping a running job
+local function stop()
+	local lan
+
+	if type(opts.set.languages) == "table" then
+		for lang, lang_config in pairs(opts.set.languages) do
+			if type(lang_config) == "table" then
+				lan = lang_config -- Assign lang_config to lan
+			else
+				print("Error: Missing field for language", lang)
+			end
+		end
+	else
+		print("Error: opts.set.languages is not a table")
+	end
+
+	if not job_id then
+		vim.notify(lan.emoji .. " No script is running.", vim.log.levels.INFO)
+		return
+	end
+
+	-- Stop the job if it's running
+	vim.fn.jobstop(job_id)
+	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
+	Reloader = opts.tweaks.stop
+	job_id = nil
+	close_output_buffer()
+
+	-- Close the output window if it's still valid and open
+	if output_win and vim.api.nvim_win_is_valid(output_win) then
+		vim.api.nvim_win_close(output_win, true)
 	end
 end
 
