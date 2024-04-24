@@ -378,5 +378,5 @@ return {
 	test_restart = test_restart,
 	stop = stop,
 	silent = silent,
-	autosave = autosave(),
+	autosave = autosave,
 }
