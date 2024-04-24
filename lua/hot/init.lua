@@ -246,7 +246,7 @@ local function test_restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan.test .. "", {
+			job_id = vim.fn.jobstart(lan.test .. " ", {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
