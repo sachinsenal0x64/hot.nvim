@@ -1,10 +1,23 @@
 local opts = require("hot.params").opts
 
 local job_id = nil
-local output_buf = nil
 local output_win = nil
+local output_buf = nil
+
+local function initialize_output_buf()
+	-- Check if output_buf is already initialized
+	if not output_buf or not vim.api.nvim_buf_is_valid(output_buf) then
+		-- Initialize output_buf
+		output_buf = vim.api.nvim_create_buf(false, true)
+		-- Additional configuration if needed
+	end
+end
 
 local function output_to_buffer(data, is_error)
+	-- Ensure output_buf is initialized
+	initialize_output_buf()
+
+	-- Check if data is nil or empty
 	if not data or #data == 0 then
 		return
 	end
@@ -23,9 +36,9 @@ local function output_to_buffer(data, is_error)
 
 	-- Check if there was an error
 	if not success then
-		print("")
+		print("Error setting lines in output buffer:", err)
 	end
-end -- Ensure the functions are accessible by making them global
+end
 
 -- Function to close the output buffer
 local function close_output_buffer()
