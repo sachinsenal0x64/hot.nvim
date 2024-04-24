@@ -58,8 +58,8 @@ Install the plugin with your preferred package manager:
         opts.tweaks.test_done = '🧪.✅'
         opts.tweaks.test_fail = '🧪.❌'
         opts.tweaks.langs = {
-			      "python",
-      			"go",
+		"python",
+                "go",
         },
 
         --- If the 'main.*' file doesn't exist, it will fall back to 'index.*'
