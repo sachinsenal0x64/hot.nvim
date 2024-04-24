@@ -91,6 +91,7 @@ local function stop()
 	vim.fn.jobstop(job_id)
 	vim.notify(lan.emoji .. " Stopping script...", vim.log.levels.INFO)
 	close_output_buffer()
+
 	Reloader = opts.tweaks.stop
 	job_id = nil
 
@@ -134,7 +135,7 @@ local function restart()
 	if type(opts.set.languages) == "table" then
 		for lang, lang_config in pairs(opts.set.languages) do
 			if type(lang_config) == "table" then
-				lan = lang_config -- Assign lang_config to lan
+				lan = lang_config.ext
 			else
 				print("Error: Missing field for language", lang)
 			end
