@@ -225,44 +225,102 @@ local function test_restart()
 		print("Error: opts.set.languages is not a table")
 	end
 
-	-- Get the root directory of the project
-	local root_dir = vim.fn.getcwd()
+	if lan then
+		-- Get the root directory of the project
+		local root_dir = vim.fn.getcwd()
 
-	-- Find the test file in the root directory and its subdirectories
-	local test_file = find_test_file(root_dir, lan.ext)
+		-- Find the test file in the root directory and its subdirectories
+		local test_file = find_test_file(root_dir, lan.ext)
 
-	if not test_file then
-		vim.notify("Test file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-		return
+		if not test_file then
+			vim.notify("Test file not found in project directory or its subdirectories", vim.log.levels.ERROR)
+			return
+		end
+
+		vim.cmd("write")
+		local file = vim.fn.shellescape(test_file) -- Get the current file path
+
+		-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
+		Reloader = opts.tweaks.test
+		open_output_buffer()
+
+		vim.defer_fn(function()
+			job_id = vim.fn.jobstart(lan.test .. " ", {
+				on_stdout = function(_, data)
+					output_to_buffer(data, false)
+				end,
+				on_stderr = function(_, data)
+					output_to_buffer(data, true)
+				end,
+				on_exit = function(_, code)
+					job_id = nil
+					if code > 0 then
+						vim.notify(lan.emoji .. " Script exited with code " .. code, vim.log.levels.WARN)
+						Reloader = opts.tweaks.test_fail
+					else
+						vim.notify(lan.emoji .. " Script executed successfully", vim.log.levels.INFO)
+						Reloader = opts.tweaks.test_done
+					end
+				end,
+			})
+		end, 500)
+	end
+end
+
+-- Function to silently restart the script
+
+local function silent()
+	if job_id then
+		vim.fn.jobstop(job_id)
+		job_id = nil
 	end
 
-	vim.cmd("write")
-	local file = vim.fn.shellescape(test_file) -- Get the current file path
+	local lan
 
-	-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
-	Reloader = opts.tweaks.test
-	open_output_buffer()
+	if type(opts.set.languages) == "table" then
+		for lang, lang_config in pairs(opts.set.languages) do
+			if type(lang_config) == "table" then
+				lan = lang_config -- Assign lang_config to lan
+			else
+				print("Error: Missing field for language", lang)
+			end
+		end
+	else
+		print("Error: opts.set.languages is not a table")
+	end
 
-	vim.defer_fn(function()
-		job_id = vim.fn.jobstart(lan.test .. " ", {
-			on_stdout = function(_, data)
-				output_to_buffer(data, false)
-			end,
-			on_stderr = function(_, data)
-				output_to_buffer(data, true)
-			end,
-			on_exit = function(_, code)
-				job_id = nil
-				if code > 0 then
-					vim.notify(lan.emoji .. " Script exited with code " .. code, vim.log.levels.WARN)
-					Reloader = opts.tweaks.test_fail
-				else
-					vim.notify(lan.emoji .. " Script executed successfully", vim.log.levels.INFO)
-					Reloader = opts.tweaks.test_done
-				end
-			end,
-		})
-	end, 500)
+	if lan then
+		vim.defer_fn(function()
+			-- Get the root directory of the project
+			local root_dir = vim.fn.getcwd()
+			-- Find the main file in the root directory and its subdirectories
+			local main_file = find_main_file(root_dir, lan.ext)
+
+			if not main_file then
+				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
+				return
+			end
+
+			vim.cmd("write")
+			local file = vim.fn.shellescape(main_file) -- Get the current file path
+
+			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
+			Reloader = opts.tweaks.start
+			job_id = vim.fn.jobstart(lan.cmd .. " ", {
+				on_stdout = function(_, data) end, -- No output handling
+				on_stderr = function(_, data) end, -- No output handling
+				on_exit = function(_, code)
+					job_id = nil
+					-- Uncomment the following lines to display exit status notifications
+					-- if code > 0 then
+					--   vim.notify(lang.emoji .. ' Silent script exited with code ' .. code, vim.log.levels.WARN)
+					-- else
+					-- vim.notify(lang.emoji .. ' Silent script executed successfully', vim.log.levels.INFO)
+					-- end
+				end,
+			})
+		end, 500) -- Defer the function call by 500ms to allow for any pending operations
+	end
 end
 
 return {
@@ -271,4 +329,5 @@ return {
 	close_output_buffer = close_output_buffer,
 	test_restart = test_restart,
 	stop = stop,
+	silent = silent,
 }
