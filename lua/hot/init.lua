@@ -161,7 +161,7 @@ local function restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan.cmd .. " ", {
+			job_id = vim.fn.jobstart(lan.cmd .. " " .. file, {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
@@ -306,7 +306,7 @@ local function silent()
 
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
-			job_id = vim.fn.jobstart(lan.cmd .. " ", {
+			job_id = vim.fn.jobstart(lan.cmd .. " " .. file, {
 				on_stdout = function(_, data) end, -- No output handling
 				on_stderr = function(_, data) end, -- No output handling
 				on_exit = function(_, code)
