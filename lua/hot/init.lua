@@ -116,8 +116,6 @@ local function find_main_file(directory, extensions)
 			for _, ext in ipairs(extensions) do
 				if file == "main" .. ext then
 					return path
-				elseif file == opts.tweaks.custom_file .. ext then
-					return path
 				end
 			end
 		end
@@ -148,22 +146,8 @@ local function restart()
 	if lan then
 		-- Get the root directory of the project
 		local root_dir = vim.fn.getcwd()
-
-		local filetype = vim.eval("&filetype")
-
-		-- Check if the filetype is recognized and extensions are available
-		local extensions = lan[filetype]
-
-		if not extensions then
-			-- Handle unrecognized filetype or missing extensions
-			print("Error: Filetype not recognized or extensions not available for filetype:", filetype)
-			return
-		end -- Get the extensions based on the current file type
-
-		local extensions = lan[filetype]
-
 		-- Find the main file in the root directory and its subdirectories
-		local main_file = find_main_file(root_dir, extensions)
+		local main_file = find_main_file(root_dir, lan.ext)
 
 		if not main_file then
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
