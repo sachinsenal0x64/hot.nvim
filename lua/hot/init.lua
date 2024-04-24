@@ -116,8 +116,6 @@ local function find_main_file(directory, extensions)
 			for _, ext in ipairs(extensions) do
 				if file == "main" .. ext then
 					return path
-				elseif file == opts.tweaks.custom_file .. ext then
-					return path
 				end
 			end
 		end
@@ -188,6 +186,7 @@ local function restart()
 		end, 500)
 	end
 end
+
 -- Define a function to find the main_test file
 local function find_test_file(directory, extensions)
 	for _, file in ipairs(vim.fn.readdir(directory)) do
