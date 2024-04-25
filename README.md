@@ -148,11 +148,9 @@ sections = {
 <summary>userscript for browser live reloading</summary>
   <br>
   
-  Get The Script : https://greasyfork.org/en/scripts/493413-hot
+  - Get The Script : https://greasyfork.org/en/scripts/493413-hot
   
-  <br>
-
-You can add as many URLs as you want. For example: `// @match *://*.localhost:8080/*`
+  - You can add as many URLs as you want. For example: `// @match *://*.localhost:8080/*`
 
   ```js
 
