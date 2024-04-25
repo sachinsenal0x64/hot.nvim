@@ -182,9 +182,9 @@ local function restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan["cmd"] .. " ", {
+			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
 				on_stdout = function(_, data)
-					output_to_buffer(data, false)
+					output_to_buffer(data, true)
 				end,
 				on_stderr = function(_, data)
 					output_to_buffer(data, true)
