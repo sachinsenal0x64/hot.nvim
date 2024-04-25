@@ -140,6 +140,7 @@ end
 
 local function restart()
 	if job_id then
+		close_output_buffer()
 		vim.fn.jobstop(job_id)
 		job_id = nil
 	end
@@ -181,7 +182,7 @@ local function restart()
 		open_output_buffer()
 
 		vim.defer_fn(function()
-			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
+			job_id = vim.fn.jobstart(lan["cmd"] .. " ", {
 				on_stdout = function(_, data)
 					output_to_buffer(data, false)
 				end,
