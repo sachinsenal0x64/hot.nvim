@@ -181,8 +181,7 @@ sections = {
 })();
 
 ```
-> [!TIP]
->  🏆 Now you're ready to go! Hooray!
+🏆 Now you're ready to go! Hooray!
 
 </details>
 
