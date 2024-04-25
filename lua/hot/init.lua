@@ -132,8 +132,6 @@ local function find_main_file(directory, extensions)
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
 					return path
-				elseif string.match(file, "%.?" .. ext .. "$") then
-					return path
 				end
 			end
 		end
