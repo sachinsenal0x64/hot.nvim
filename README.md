@@ -5,7 +5,7 @@
   <img alt="Hot" src="https://sachinsenal0x64.github.io/picx-images-hosting/Background.92pxhcjiab.webp">
   
   <h1 align="center">Hot</h1>
-  🔥 A hot reloader for Neovim that works with any programming language.
+  🔥 A hot reloader that works with any programming language.
 </p>
 
 </div>
