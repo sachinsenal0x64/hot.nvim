@@ -290,7 +290,6 @@ end
 -- Function to silently restart the script
 
 local function silent()
-	stop()
 	if job_id then
 		vim.fn.jobstop(job_id)
 		job_id = nil
@@ -325,7 +324,6 @@ local function silent()
 				return
 			end
 
-			vim.cmd("write")
 			local file = vim.fn.shellescape(main_file) -- Get the current file path
 
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
