@@ -120,4 +120,25 @@ Install the plugin with your preferred package manager:
 ```
 </details>
 
+### ⚡ [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+
+<details>
+<summary>status bar</summary>
+  
+```lua
+ 
+local hot = {
+          'Reloader',
+        },
+
+sections = {
+
+    lualine_b = {
+            hot,
+   }
+},   
+
+```
+</details>
+
 #### 🏆 Now you're ready to go! Hooray!
