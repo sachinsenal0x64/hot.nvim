@@ -304,7 +304,6 @@ local function silent()
 			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
 		else
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-			vim.cmd("write")
 			return
 		end
 	else
@@ -314,18 +313,23 @@ local function silent()
 
 	-- Check if lan is still accessible here
 	if lan then
-		vim.defer_fn(function()
-			-- Get the root directory of the project
+		local main_file
+		-- If the current buffer is not the main file, find the main file
+		if not vim.bo.modifiable then
 			local root_dir = vim.fn.getcwd()
-			-- Find the main file in the root directory and its subdirectories
-			local main_file = find_main_file(root_dir, lan["ext"])
+			main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
 				return
 			end
+		else
+			-- If the current buffer is the main file, use its path
+			main_file = vim.fn.expand("%:p")
+		end
 
-			local file = vim.fn.shellescape(main_file) -- Get the current file path
+		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
+		vim.defer_fn(function()
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
