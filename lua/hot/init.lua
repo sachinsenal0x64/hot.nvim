@@ -130,7 +130,7 @@ local function find_main_file(directory, extensions)
 			for _, ext in ipairs(extensions) do
 				if file == "main" .. ext then
 					return path
-				elseif file == "hello" .. ext then
+				elseif file == opts.tweaks.custom_file .. ext then
 					return path
 				end
 			end
@@ -257,6 +257,7 @@ local function test_restart()
 			return
 		end
 
+		vim.cmd("write")
 		local file = vim.fn.shellescape(test_file) -- Get the current file path
 
 		-- vim.notify(lang.emoji .. ' Starting script...', vim.log.levels.INFO)
