@@ -128,7 +128,7 @@ local function find_main_file(directory, extensions)
 		else
 			-- Check if the file name matches any of the extensions
 			for _, ext in ipairs(extensions) do
-				if file == "*" .. ext then
+				if file == "main" .. ext then
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
 					return path
@@ -190,7 +190,7 @@ local function restart()
 				end,
 				on_exit = function(_, code)
 					job_id = nil
-					print("exit")
+					print("debug exit")
 					-- Handle job exit if needed
 				end,
 			})
@@ -304,7 +304,7 @@ local function silent()
 			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
 		else
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-
+			vim.cmd("write")
 			return
 		end
 	else
