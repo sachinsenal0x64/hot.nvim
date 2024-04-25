@@ -179,8 +179,12 @@ local function restart()
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
-				on_stdout = function(_, data) end, -- No output handling
-				on_stderr = function(_, data) end, -- No output handling
+				on_stdout = function(_, data)
+					output_to_buffer(data, true)
+				end, -- No output handling
+				on_stderr = function(_, data)
+					output_to_buffer(data, true)
+				end, -- No output handling
 				on_exit = function(_, code)
 					job_id = nil
 					-- Uncomment the following lines to display exit status notifications
@@ -264,7 +268,7 @@ local function test_restart()
 		vim.defer_fn(function()
 			job_id = vim.fn.jobstart(lan["test"] .. " ", {
 				on_stdout = function(_, data)
-					output_to_buffer(data, false)
+					output_to_buffer(data, true)
 				end,
 				on_stderr = function(_, data)
 					output_to_buffer(data, true)
