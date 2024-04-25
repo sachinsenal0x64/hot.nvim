@@ -180,6 +180,12 @@ sections = {
 })();
 
 ```
+#### 🏆 Now you're ready to go! Hooray!
+
 </details>
 
-#### 🏆 Now you're ready to go! Hooray!
+<br>
+
+### 🫂 Contributing
+
+- Feel free to send PR's regarding spelling mistakes, incorrect grammar etc.
