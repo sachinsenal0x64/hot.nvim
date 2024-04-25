@@ -24,7 +24,7 @@ local function output_to_buffer(data, is_error)
 	-- Attempt to set lines in buffer
 	local success, err = pcall(function()
 		for _, line in ipairs(lines) do
-			vim.api.nvim_buf_set_lines(output_buf, -1, -1, false, { line })
+			vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, { line })
 		end
 	end)
 
