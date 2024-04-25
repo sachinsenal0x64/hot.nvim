@@ -313,23 +313,36 @@ local function silent()
 
 	-- Check if lan is still accessible here
 	if lan then
-		local main_file
-		-- If the current buffer is not the main file, find the main file
-		if not vim.bo.modifiable then
+		vim.defer_fn(function()
+			-- Get the root directory of the project
 			local root_dir = vim.fn.getcwd()
-			main_file = find_main_file(root_dir, lan["ext"])
+			-- Find the main file in the root directory and its subdirectories
+			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
+
+				local file = vim.fn.shellescape(main_file) -- Get the current file path
+
+				-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
+				Reloader = opts.tweaks.start
+				job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
+					on_stdout = function(_, data) end, -- No output handling
+					on_stderr = function(_, data) end, -- No output handling
+					on_exit = function(_, code)
+						job_id = nil
+						-- Uncomment the following lines to display exit status notifications
+						-- if code > 0 then
+						--   vim.notify(lang.emoji .. ' Silent script exited with code ' .. code, vim.log.levels.WARN)
+						-- else
+						-- vim.notify(lang.emoji .. ' Silent script executed successfully', vim.log.levels.INFO)
+						-- end
+					end,
+				})
 				return
 			end
-		else
-			-- If the current buffer is the main file, use its path
-			main_file = vim.fn.expand("%:p")
-		end
 
-		local file = vim.fn.shellescape(main_file) -- Get the current file path
+			local file = vim.fn.shellescape(main_file) -- Get the current file path
 
-		vim.defer_fn(function()
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
