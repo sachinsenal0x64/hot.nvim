@@ -345,46 +345,6 @@ local function silent()
 	end
 end
 
--- Define a function to check if the current buffer is the main file
-local function is_main_file(buffer_name)
-	local lan = nil
-	local filetype = vim.fn.getbufvar(buffer_name, "&filetype")
-
-	if type(opts.set.languages) == "table" then
-		-- Check if there is a language configuration for the current filetype
-		if opts.set.languages[filetype] then
-			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
-		else
-			return false
-		end
-	else
-		print("Error: opts.set.languages is not a table")
-		return false
-	end
-
-	-- Get the root directory of the project
-	local root_dir = vim.fn.getcwd()
-	-- Find the main file in the root directory and its subdirectories
-	local main_file = find_main_file(root_dir, lan["ext"])
-
-	if main_file then
-		return vim.fn.resolve(main_file) == vim.fn.resolve(vim.fn.bufname("%"))
-	else
-		return false
-	end
-end
-
--- Define a function to auto-restart if the current buffer is not the main file
-local function auto_restart()
-	local current_buffer_name = vim.fn.bufname("%")
-	if not is_main_file(current_buffer_name) then
-		restart()
-	end
-end
-
--- Add an autocmd to trigger auto_restart when switching buffers
-vim.cmd([[autocmd BufEnter * lua auto_restart()]])
-
 return {
 	restart = restart,
 	open_output_buffer = open_output_buffer,
