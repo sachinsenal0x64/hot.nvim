@@ -99,7 +99,17 @@ Install the plugin with your preferred package manager:
         vim.api.nvim_set_keymap('n', '<F7>', '<Cmd>lua require("hot").open_output_buffer()<CR>', { noremap = true, silent = true })
         -- Close Buffer
         vim.api.nvim_set_keymap('n', '<F8>', '<Cmd>lua require("hot").close_output_buffer()<CR>', { noremap = true, silent = true })
-
+  
+       -- Auto Reload on Save
+       local save_group = vim.api.nvim_create_augroup('save_mapping', { clear = true })
+              vim.api.nvim_create_autocmd('BufWritePost', {
+                desc = 'Reloader',
+                group = save_group,
+                pattern = 'main.go',
+                callback = function()
+                  require('hot').silent()
+                end,
+              })
       end,
     },
 
