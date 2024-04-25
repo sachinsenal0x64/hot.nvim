@@ -115,20 +115,8 @@ local function stop()
 	end
 end
 
-local main_file_path = nil
-local custom_file_path = nil
-
+-- Recursive function to search for the main file in the directory and its subdirectories
 local function find_main_file(directory, extensions)
-	-- Check if main file has been found previously
-	if main_file_path then
-		return main_file_path
-	end
-
-	-- Check if custom file has been found previously
-	if custom_file_path then
-		return custom_file_path
-	end
-
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
 		if vim.fn.isdirectory(path) == 1 then
@@ -141,10 +129,8 @@ local function find_main_file(directory, extensions)
 			-- Check if the file name matches any of the extensions
 			for _, ext in ipairs(extensions) do
 				if file == "main" .. ext then
-					main_file_path = path
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
-					custom_file_path = path
 					return path
 				end
 			end
@@ -358,6 +344,46 @@ local function silent()
 		end, 500) -- Defer the function call by 500ms to allow for any pending operations
 	end
 end
+
+-- Define a function to check if the current buffer is the main file
+local function is_main_file(buffer_name)
+	local lan = nil
+	local filetype = vim.fn.getbufvar(buffer_name, "&filetype")
+
+	if type(opts.set.languages) == "table" then
+		-- Check if there is a language configuration for the current filetype
+		if opts.set.languages[filetype] then
+			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
+		else
+			return false
+		end
+	else
+		print("Error: opts.set.languages is not a table")
+		return false
+	end
+
+	-- Get the root directory of the project
+	local root_dir = vim.fn.getcwd()
+	-- Find the main file in the root directory and its subdirectories
+	local main_file = find_main_file(root_dir, lan["ext"])
+
+	if main_file then
+		return vim.fn.resolve(main_file) == vim.fn.resolve(vim.fn.bufname("%"))
+	else
+		return false
+	end
+end
+
+-- Define a function to auto-restart if the current buffer is not the main file
+local function auto_restart()
+	local current_buffer_name = vim.fn.bufname("%")
+	if not is_main_file(current_buffer_name) then
+		restart()
+	end
+end
+
+-- Add an autocmd to trigger auto_restart when switching buffers
+vim.cmd([[autocmd BufEnter * lua auto_restart()]])
 
 return {
 	restart = restart,
