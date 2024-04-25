@@ -140,7 +140,6 @@ end
 
 local function restart()
 	if job_id then
-		close_output_buffer()
 		vim.fn.jobstop(job_id)
 		job_id = nil
 	end
