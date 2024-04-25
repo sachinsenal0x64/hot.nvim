@@ -128,7 +128,7 @@ local function find_main_file(directory, extensions)
 		else
 			-- Check if the file name matches any of the extensions
 			for _, ext in ipairs(extensions) do
-				if file == "main" .. ext then
+				if file == "*" .. ext then
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
 					return path
