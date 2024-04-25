@@ -139,6 +139,7 @@ local function find_main_file(directory, extensions)
 end
 
 local function restart()
+	close_output_buffer()
 	if job_id then
 		vim.fn.jobstop(job_id)
 		job_id = nil
@@ -163,37 +164,34 @@ local function restart()
 
 	-- Check if lan is still accessible here
 	if lan then
-		-- Get the root directory of the project
-		local root_dir = vim.fn.getcwd()
-		-- Find the main file in the root directory and its subdirectories
-		local main_file = find_main_file(root_dir, lan["ext"])
-
-		if not main_file then
-			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-			return
-		end
-
-		vim.cmd("write")
-		local file = vim.fn.shellescape(main_file) -- Get the current file path
-
-		-- Set up the job to execute the script
-		Reloader = opts.tweaks.start
-		open_output_buffer()
-
 		vim.defer_fn(function()
+			-- Get the root directory of the project
+			local root_dir = vim.fn.getcwd()
+			-- Find the main file in the root directory and its subdirectories
+			local main_file = find_main_file(root_dir, lan["ext"])
+			if not main_file then
+				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
+				return
+			end
+
+			local file = vim.fn.shellescape(main_file) -- Get the current file path
+
+			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
+			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
-				on_stdout = function(_, data)
-					output_to_buffer(data, true)
-				end,
-				on_stderr = function(_, data)
-					output_to_buffer(data, true)
-				end,
+				on_stdout = function(_, data) end, -- No output handling
+				on_stderr = function(_, data) end, -- No output handling
 				on_exit = function(_, code)
 					job_id = nil
-					-- Handle job exit if needed
+					-- Uncomment the following lines to display exit status notifications
+					-- if code > 0 then
+					--   vim.notify(lang.emoji .. ' Silent script exited with code ' .. code, vim.log.levels.WARN)
+					-- else
+					-- vim.notify(lang.emoji .. ' Silent script executed successfully', vim.log.levels.INFO)
+					-- end
 				end,
 			})
-		end, 500)
+		end, 500) -- Defer the function call by 500ms to allow for any pending operations
 	end
 end
 
