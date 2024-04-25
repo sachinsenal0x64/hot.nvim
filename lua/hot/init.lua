@@ -132,6 +132,8 @@ local function find_main_file(directory, extensions)
 					return path
 				elseif file == opts.tweaks.custom_file .. ext then
 					return path
+				elseif string.match(file, "%.?" .. ext .. "$") then
+					return path
 				end
 			end
 		end
@@ -304,6 +306,7 @@ local function silent()
 			lan = opts.set.languages[filetype] -- Assign the language configuration to lan
 		else
 			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
+
 			return
 		end
 	else
@@ -320,24 +323,6 @@ local function silent()
 			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
 				vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-
-				local file = vim.fn.shellescape(main_file) -- Get the current file path
-
-				-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
-				Reloader = opts.tweaks.start
-				job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
-					on_stdout = function(_, data) end, -- No output handling
-					on_stderr = function(_, data) end, -- No output handling
-					on_exit = function(_, code)
-						job_id = nil
-						-- Uncomment the following lines to display exit status notifications
-						-- if code > 0 then
-						--   vim.notify(lang.emoji .. ' Silent script exited with code ' .. code, vim.log.levels.WARN)
-						-- else
-						-- vim.notify(lang.emoji .. ' Silent script executed successfully', vim.log.levels.INFO)
-						-- end
-					end,
-				})
 				return
 			end
 
