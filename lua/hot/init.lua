@@ -114,42 +114,39 @@ local function stop()
 		vim.api.nvim_win_close(output_win, true)
 	end
 end
--- Recursive function to search for the main file in the directory and its subdirectories
+
+local main_file_path = nil
+local custom_file_path = nil
+
 local function find_main_file(directory, extensions)
-	-- Check files in the current directory
-	for _, file in ipairs(vim.fn.readdir(directory)) do
-		local path = directory .. "/" .. file
-		-- Check if the file name matches any of the extensions
-		for _, ext in ipairs(extensions) do
-			if file == "main" .. ext then
-				return path
-			elseif file == opts.tweaks.custom_file .. ext then
-				return path
-			end
-		end
+	-- Check if main file has been found previously
+	if main_file_path then
+		return main_file_path
 	end
 
-	-- If "main" file not found in the current directory, dynamically search in "gotham" directory
-	local gotham_dir = "/home/pc/Documents/github/gotham"
-	for _, file in ipairs(vim.fn.readdir(gotham_dir)) do
-		local path = gotham_dir .. "/" .. file
-		-- Check if the file name matches any of the extensions
-		for _, ext in ipairs(extensions) do
-			if file == "main" .. ext then
-				return path
-			elseif file == opts.tweaks.custom_file .. ext then
-				return path
-			end
-		end
+	-- Check if custom file has been found previously
+	if custom_file_path then
+		return custom_file_path
 	end
 
-	-- If not found, recursively search subdirectories
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
 		if vim.fn.isdirectory(path) == 1 then
+			-- If it's a directory, recursively search inside it
 			local main_file = find_main_file(path, extensions)
 			if main_file then
 				return main_file
+			end
+		else
+			-- Check if the file name matches any of the extensions
+			for _, ext in ipairs(extensions) do
+				if file == "main" .. ext then
+					main_file_path = path
+					return path
+				elseif file == opts.tweaks.custom_file .. ext then
+					custom_file_path = path
+					return path
+				end
 			end
 		end
 	end
