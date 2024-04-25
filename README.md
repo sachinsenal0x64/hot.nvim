@@ -33,7 +33,8 @@
   
 ## 📦 Installation
 
-- Install the plugin with your preferred package manager:
+> [!NOTE]
+> Install the plugin with your preferred package manager.
 
 ### 💤 [lazy.nvim](https://github.com/folke/lazy.nvim)
 
@@ -187,5 +188,4 @@ sections = {
 <br>
 
 ### 🫂 Contributing
-
 - Feel free to send PR's regarding spelling mistakes, incorrect grammar etc.
