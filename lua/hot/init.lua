@@ -174,7 +174,6 @@ local function restart()
 			return
 		end
 
-		vim.cmd("write")
 		local file = vim.fn.shellescape(main_file) -- Get the current file path
 
 		-- Set up the job to execute the script
@@ -191,6 +190,7 @@ local function restart()
 				end,
 				on_exit = function(_, code)
 					job_id = nil
+					print("exit")
 					-- Handle job exit if needed
 				end,
 			})
