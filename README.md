@@ -159,7 +159,7 @@ sections = {
 // @name         Hot
 // @namespace    https://github.com/sachinsenal0x64/hot.nvim
 // @version      1.0
-// @description  🔥 A hot reloader for Browser.
+// @description  🔥 A hot reloader for the Browser.
 // @author       sachinsenal0x64
 // @match        *://*.localhost:8086/*
 // @match        *://*.atom.com/*
