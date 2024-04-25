@@ -12,6 +12,7 @@
 ---@field test string
 ---@field test_done string
 ---@field test_fail string
+---@field patterns string []
 ---@field custom_file string
 
 ---@type Options
@@ -25,7 +26,6 @@ local opts = {
 				emoji = "🐍",
 				test = "python -m unittest",
 				ext = { ".py" },
-				pattern = { "*.py" },
 			},
 
 			go = {
@@ -35,7 +35,6 @@ local opts = {
 				emoji = "🐹",
 				test = "go test",
 				ext = { ".go" },
-				pattern = { "*.go" },
 			},
 		},
 	},
@@ -46,6 +45,7 @@ local opts = {
 		test = "🧪",
 		test_done = "🧪.✅",
 		test_fail = "🧪.❌",
+		patterns = { "*.go", "*.py" },
 		custom_file = "index",
 	},
 }
