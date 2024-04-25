@@ -124,7 +124,7 @@ Install the plugin with your preferred package manager:
 
 <details>
 <summary>status bar</summary>
-  
+
 ```lua
  
 local hot = {
@@ -137,6 +137,49 @@ sections = {
             hot,
    }
 },   
+
+```
+</details>
+
+### 🐵 [Violentmonkey](https://violentmonkey.github.io)
+
+
+<details>
+<summary>Userscript for browser live reloading</summary>
+  <br>
+  
+  Get The Script : https://greasyfork.org/en/scripts/493413-hot
+  
+  <br>
+
+You can add as many URLs as you want. For example: `// @match *://*.localhost:8080/*`
+
+  ```js
+
+// ==UserScript==
+// @name         Hot
+// @namespace    https://github.com/sachinsenal0x64/hot.nvim
+// @version      1.0
+// @description  🔥 A hot reloader for Browser.
+// @author       sachinsenal0x64
+// @match        *://*.localhost:8086/*
+// @match        *://*.atom.com/*
+// @license      MIT
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Create a meta tag for auto-refresh
+    var metaTag = document.createElement('meta');
+    metaTag.setAttribute('http-equiv', 'refresh');
+    metaTag.setAttribute('content', '5'); // Refresh every 5 seconds
+
+    // Find the <head> element and append the meta tag to it
+    var head = document.querySelector('head');
+    head.appendChild(metaTag);
+})();
 
 ```
 </details>
