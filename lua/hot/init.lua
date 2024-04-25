@@ -117,13 +117,15 @@ end
 
 -- Recursive function to search for the main file in the directory and its subdirectories
 local function find_main_file(directory, extensions)
+	local main_path = nil -- Initialize main_path to nil
+
 	for _, file in ipairs(vim.fn.readdir(directory)) do
 		local path = directory .. "/" .. file
 		if vim.fn.isdirectory(path) == 1 then
 			-- If it's a directory, recursively search inside it
-			local main_file = find_main_file(path, extensions)
-			if main_file then
-				return main_file
+			local found_file = find_main_file(path, extensions)
+			if found_file then
+				return found_file
 			end
 		else
 			-- Check if the file name matches any of the extensions
@@ -134,10 +136,20 @@ local function find_main_file(directory, extensions)
 					return path
 				end
 			end
+			-- If neither "main" nor "custom" files were found, store the path of the first file with matching extensions
+			for _, ext in ipairs(extensions) do
+				if string.match(file, "%.?" .. ext .. "$") then
+					if not main_path then
+						main_path = path
+					end
+				end
+			end
 		end
 	end
-end
 
+	-- If neither "main" nor "custom" files were found, return the path of the first file with matching extensions
+	return main_path
+end
 local function restart()
 	if job_id then
 		close_output_buffer()
