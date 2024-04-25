@@ -37,7 +37,9 @@ Install the plugin with your preferred package manager:
 
 ### 💤 [lazy.nvim](https://github.com/folke/lazy.nvim)
 
-
+<details>
+<summary>hot.nvim</summary>
+  
 ```lua
     -- Enable Current directory 
     vim.opt.autochdir == true,
@@ -116,5 +118,6 @@ Install the plugin with your preferred package manager:
 
 
 ```
+</details>
 
 #### 🏆 Now you're ready to go! Hooray!
