@@ -54,7 +54,7 @@ Install the plugin with your preferred package manager:
           Reloader = '💤'
   
           Pattern = opts.tweaks.patterns
-          Pattern = { '*.py', '*.go' }
+          Pattern = { 'main.py', 'main.go' }
   
           opts.tweaks.start = '🚀'
           opts.tweaks.stop = '💤'
