@@ -145,7 +145,7 @@ sections = {
 
 
 <details>
-<summary>Userscript for browser live reloading</summary>
+<summary>userscript for browser live reloading</summary>
   <br>
   
   Get The Script : https://greasyfork.org/en/scripts/493413-hot
