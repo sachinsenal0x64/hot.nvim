@@ -33,7 +33,7 @@
   
 ## 📦 Installation
 
-Install the plugin with your preferred package manager:
+- Install the plugin with your preferred package manager:
 
 ### 💤 [lazy.nvim](https://github.com/folke/lazy.nvim)
 
