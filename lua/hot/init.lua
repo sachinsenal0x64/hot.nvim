@@ -321,7 +321,6 @@ local function silent()
 			local main_file = find_main_file(root_dir, lan["ext"])
 
 			if not main_file then
-				vim.notify("Working on it", vim.log.levels.ERROR)
 				-- Function to parse JSON string to Lua table
 				local function json_to_table(json_str)
 					local result = {}
@@ -332,7 +331,7 @@ local function silent()
 				end
 
 				-- Define the path to the JSON file
-				local json_path = "/home/pc/.config/hot.json"
+				local json_path = "$HOME/.config/hot.json"
 
 				-- Open the JSON file for reading
 				local json_file = io.open(json_path, "r")
@@ -349,7 +348,6 @@ local function silent()
 					main_file = json_data.file
 
 					-- Print the value
-					vim.notify(main_file, vim.log.levels.ERROR)
 				else
 					print("Error: Couldn't open JSON file for reading")
 				end
@@ -378,7 +376,7 @@ local function silent()
 			local json_content = table_to_json(json_data)
 
 			-- Define the path to the JSON file
-			local json_path = "/home/pc/.config/hot.json"
+			local json_path = "$HOME/.config/hot.json"
 
 			-- Open or create the JSON file
 			local json_file = io.open(json_path, "w")
