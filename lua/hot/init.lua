@@ -347,7 +347,9 @@ local function silent()
 
 					-- Access the value using the key
 					main_file = json_data.file
+				else
 					print("Error: Couldn't open JSON file for reading")
+					return
 				end
 			end
 
