@@ -320,8 +320,38 @@ local function silent()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
-				vim.notify("Path not found in project directory or its subdirectories", vim.log.levels.ERROR)
-				return
+				vim.notify("Working on it", vim.log.levels.ERROR)
+				-- Function to parse JSON string to Lua table
+				local function json_to_table(json_str)
+					local result = {}
+					for k, v in json_str:gmatch('"([^"]-)":"([^"]-)"') do
+						result[k] = v
+					end
+					return result
+				end
+
+				-- Define the path to the JSON file
+				local json_path = "/home/pc/.config/hot.json"
+
+				-- Open the JSON file for reading
+				local json_file = io.open(json_path, "r")
+
+				if json_file then
+					-- Read the JSON content from the file
+					local json_content = json_file:read("*all")
+					json_file:close()
+
+					-- Parse JSON content to Lua table
+					local json_data = json_to_table(json_content)
+
+					-- Access the value using the key
+					local main_file = json_data.file
+
+					-- Print the value
+					vim.notify(main_file, vim.log.levels.ERROR)
+				else
+					print("Error: Couldn't open JSON file for reading")
+				end
 			end
 
 			local file = vim.fn.shellescape(main_file) -- Get the current file path
@@ -339,38 +369,6 @@ local function silent()
 				end
 				result = result .. "}"
 				return result
-			end
-
-			-- Function to parse JSON string to Lua table
-			local function json_to_table(json_str)
-				local result = {}
-				for k, v in json_str:gmatch('"([^"]-)":"([^"]-)"') do
-					result[k] = v
-				end
-				return result
-			end
-
-			-- Define the path to the JSON file
-			local json_path = "/home/pc/.config/hot.json"
-
-			-- Open the JSON file for reading
-			local json_file = io.open(json_path, "r")
-
-			if json_file then
-				-- Read the JSON content from the file
-				local json_content = json_file:read("*all")
-				json_file:close()
-
-				-- Parse JSON content to Lua table
-				local json_data = json_to_table(json_content)
-
-				-- Access the value using the key
-				local file_value = json_data.file
-
-				-- Print the value
-				vim.notify(file_value, vim.log.levels.ERROR)
-			else
-				print("Error: Couldn't open JSON file for reading")
 			end
 
 			-- Define your JSON data
@@ -392,7 +390,9 @@ local function silent()
 			else
 				print("Error: Couldn't open or write to JSON file")
 				return
-			end -- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
+			end
+
+			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
 				on_stdout = function(_, data) end, -- No output handling
