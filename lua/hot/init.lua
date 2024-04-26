@@ -346,6 +346,7 @@ local function silent()
 
 					-- Access the value using the key
 					main_file = json_data.file
+					print("Error: Couldn't open JSON file for reading")
 				end
 			end
 
@@ -372,7 +373,7 @@ local function silent()
 			local json_content = table_to_json(json_data)
 
 			-- Define the path to the JSON file
-			local json_path = "$HOME/.config/hot.json"
+			local json_path = "~/.config/hot.json"
 
 			-- Open or create the JSON file
 			local json_file = io.open(json_path, "w")
@@ -382,7 +383,7 @@ local function silent()
 				json_file:write(json_content)
 				json_file:close()
 			else
-				print("Error: write to JSON file")
+				print("Error: Couldn't open or write to JSON file")
 				return
 			end
 
