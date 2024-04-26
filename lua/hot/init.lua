@@ -320,44 +320,47 @@ local function silent()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
-				local toml_path = "/home/pc/.config/hot.toml"
-				local toml_file = io.open(toml_path, "r")
-				if toml_file then
-					local toml_content = toml_file:read("*all")
-					local file = toml_content:match('file%s*=%s*"([^"]+)"')
-					if file then
-						main_file = file
-					else
-						vim.notify(
-							"Path not found in project directory or its subdirectories or in the TOML file",
-							vim.log.levels.ERROR
-						)
-						return
-					end
-				else
-					vim.notify(
-						"Path not found in project directory or its subdirectories and TOML file not found",
-						vim.log.levels.ERROR
-					)
-					return
-				end
-			end
-
-			local file = vim.fn.shellescape(main_file) -- Get the current file path
-			local file = vim.fn.shellescape(main_file) -- Get the current file path
-
-			local toml_path = "/home/pc/.config/hot.toml"
-			local toml_content = string.format('file = "%s"', file)
-			local toml_file = io.open(toml_path, "w")
-			if toml_file then
-				toml_file:write(toml_content)
-				toml_file:close()
-			else
-				print("Error: Couldn't open or write to TOML file")
+				vim.notify("Path not found in project directory or its subdirectories", vim.log.levels.ERROR)
 				return
 			end
 
-			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
+			local file = vim.fn.shellescape(main_file) -- Get the current file path
+
+			local function table_to_json(tbl)
+				local result = "{"
+				local first = true
+				for k, v in pairs(tbl) do
+					if not first then
+						result = result .. ","
+					else
+						first = false
+					end
+					result = result .. '"' .. k .. '":"' .. v .. '"'
+				end
+				result = result .. "}"
+				return result
+			end
+
+			-- Define your JSON data
+			local json_data = { file = main_file }
+
+			-- Convert Lua table to JSON string
+			local json_content = table_to_json(json_data)
+
+			-- Define the path to the JSON file
+			local json_path = "/home/pc/.config/hot.json"
+
+			-- Open or create the JSON file
+			local json_file = io.open(json_path, "w")
+
+			if json_file then
+				-- Write JSON content to the file
+				json_file:write(json_content)
+				json_file:close()
+			else
+				print("Error: Couldn't open or write to JSON file")
+				return
+			end -- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
 				on_stdout = function(_, data) end, -- No output handling
