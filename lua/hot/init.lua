@@ -116,30 +116,26 @@ local function stop()
 end
 
 -- Recursive function to search for the main file in the directory and its subdirectories
-
-local function find_main_file(root_directory, extensions)
-	local function recursive_search(directory)
-		for _, file in ipairs(vim.fn.readdir(directory)) do
-			local path = directory .. "/" .. file
-			if vim.fn.isdirectory(path) == 1 then
-				-- If it's a directory, recursively search inside it
-				local main_file = recursive_search(path)
-				if main_file then
-					return main_file
-				end
-			else
-				-- Check if the file name matches any of the extensions
-				for _, ext in ipairs(extensions) do
-					if file == "main" .. ext then
-						return path
-					end
+local function find_main_file(directory, extensions)
+	for _, file in ipairs(vim.fn.readdir(directory)) do
+		local path = directory .. "/" .. file
+		if vim.fn.isdirectory(path) == 1 then
+			-- If it's a directory, recursively search inside it
+			local main_file = find_main_file(path, extensions)
+			if main_file then
+				return main_file
+			end
+		else
+			-- Check if the file name matches any of the extensions
+			for _, ext in ipairs(extensions) do
+				if file == "main" .. ext then
+					return path
+				elseif file == opts.tweaks.custom_file .. ext then
+					return path
 				end
 			end
 		end
-		return nil
 	end
-
-	return recursive_search(root_directory)
 end
 
 local function restart()
@@ -169,7 +165,7 @@ local function restart()
 	-- Check if lan is still accessible here
 	if lan then
 		-- Get the root directory of the project
-		local root_dir = vim.fn.getcwd()
+		local root_dir = "/home/pc/Documents/github/gotham/backend/cmd/"
 		-- Find the main file in the root directory and its subdirectories
 		local main_file = find_main_file(root_dir, lan["ext"])
 
