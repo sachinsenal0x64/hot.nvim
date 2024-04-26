@@ -325,11 +325,18 @@ local function silent()
 			end
 
 			local file = vim.fn.shellescape(main_file) -- Get the current file path
-			-- Save main file path to hot.toml
-			local config_dir = vim.fn.stdpath("/home/pc/.config/") -- Get path to config directory
-			local hot_toml_path = config_dir .. "/hot.toml"
-			local toml_data = string.format('main_file_path = "%s"', main_file)
-			vim.fn.writefile({ toml_data }, hot_toml_path)
+
+			local toml_path = "/home/pc/.config/hot.toml"
+			local toml_content = string.format('file = "%s"', file)
+			local toml_file = io.open(toml_path, "w")
+			if toml_file then
+				toml_file:write(toml_content)
+				toml_file:close()
+			else
+				print("Error: Couldn't open or write to TOML file")
+				return
+			end
+
 			-- vim.notify(lang.emoji .. ' Silently starting script...', vim.log.levels.INFO)
 			Reloader = opts.tweaks.start
 			job_id = vim.fn.jobstart(lan["cmd"] .. " " .. file, {
