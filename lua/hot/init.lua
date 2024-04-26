@@ -170,11 +170,76 @@ local function restart()
 		local main_file = find_main_file(root_dir, lan["ext"])
 
 		if not main_file then
-			vim.notify("Main file not found in project directory or its subdirectories", vim.log.levels.ERROR)
-			return
+			-- Function to parse JSON string to Lua table
+			local function json_to_table(json_str)
+				local result = {}
+				for k, v in json_str:gmatch('"([^"]-)":"([^"]-)"') do
+					result[k] = v
+				end
+				return result
+			end
+
+			local home_dir = os.getenv("HOME")
+			-- Define the path to the JSON file
+			local json_path = home_dir .. "/.config/hot.json"
+
+			-- Open the JSON file for reading
+			local json_file = io.open(json_path, "r")
+
+			if json_file then
+				-- Read the JSON content from the file
+				local json_content = json_file:read("*all")
+				json_file:close()
+
+				-- Parse JSON content to Lua table
+				local json_data = json_to_table(json_content)
+
+				-- Access the value using the key
+				main_file = json_data.file
+			else
+				print("Error: Couldn't open JSON file for reading")
+				return
+			end
 		end
 
-		local file = vim.fn.shellescape(main_file) -- Get the current file path
+		local file = vim.fn.shellescape(main_file)
+
+		local function table_to_json(tbl)
+			local result = "{"
+			local first = true
+			for k, v in pairs(tbl) do
+				if not first then
+					result = result .. ","
+				else
+					first = false
+				end
+				result = result .. '"' .. k .. '":"' .. v .. '"'
+			end
+			result = result .. "}"
+			return result
+		end
+
+		-- Define your JSON data
+		local json_data = { file = main_file }
+
+		-- Convert Lua table to JSON string
+		local json_content = table_to_json(json_data)
+
+		local home_dir = os.getenv("HOME")
+
+		local json_path = home_dir .. "/.config/hot.json"
+
+		-- Open or create the JSON file
+		local json_file = io.open(json_path, "w")
+
+		if json_file then
+			-- Write JSON content to the file
+			json_file:write(json_content)
+			json_file:close()
+		else
+			print("Error: Couldn't open or write to JSON file")
+			return
+		end
 
 		-- Set up the job to execute the script
 		Reloader = opts.tweaks.start
