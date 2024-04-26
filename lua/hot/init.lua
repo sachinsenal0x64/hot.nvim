@@ -330,8 +330,9 @@ local function silent()
 					return result
 				end
 
+				local home_dir = os.getenv("HOME")
 				-- Define the path to the JSON file
-				local json_path = "$HOME/.config/hot.json"
+				local json_path = home_dir .. "/.config/hot/hot.json"
 
 				-- Open the JSON file for reading
 				local json_file = io.open(json_path, "r")
@@ -374,7 +375,7 @@ local function silent()
 
 			local home_dir = os.getenv("HOME")
 
-			local json_path = home_dir .. "/.config/hot.json"
+			local json_path = home_dir .. "/.config/hot/hot.json"
 
 			-- Open or create the JSON file
 			local json_file = io.open(json_path, "w")
