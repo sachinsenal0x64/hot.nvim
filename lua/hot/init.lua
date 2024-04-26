@@ -165,7 +165,7 @@ local function restart()
 	-- Check if lan is still accessible here
 	if lan then
 		-- Get the root directory of the project
-		local root_dir = "/home/pc/Documents/github/gotham/backend/cmd/"
+		local root_dir = vim.fn.getcwd()
 		-- Find the main file in the root directory and its subdirectories
 		local main_file = find_main_file(root_dir, lan["ext"])
 
@@ -316,7 +316,7 @@ local function silent()
 	if lan then
 		vim.defer_fn(function()
 			-- Get the root directory of the project
-			local root_dir = vim.fn.getcwd()
+			local root_dir = "/home/pc/Documents/github/gotham/backend/cmd/"
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
