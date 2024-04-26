@@ -319,6 +319,7 @@ local function silent()
 			local root_dir = vim.fn.getcwd()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
+
 			if not main_file then
 				vim.notify("Working on it", vim.log.levels.ERROR)
 				-- Function to parse JSON string to Lua table
@@ -345,7 +346,7 @@ local function silent()
 					local json_data = json_to_table(json_content)
 
 					-- Access the value using the key
-					local main_file = json_data.file
+					main_file = json_data.file
 
 					-- Print the value
 					vim.notify(main_file, vim.log.levels.ERROR)
@@ -354,8 +355,7 @@ local function silent()
 				end
 			end
 
-			local file = vim.fn.shellescape(main_file) -- Get the current file path
-
+			local file = vim.fn.shellescape(main_file)
 			local function table_to_json(tbl)
 				local result = "{"
 				local first = true
