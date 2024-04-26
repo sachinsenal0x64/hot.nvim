@@ -372,8 +372,9 @@ local function silent()
 			-- Convert Lua table to JSON string
 			local json_content = table_to_json(json_data)
 
-			-- Define the path to the JSON file
-			local json_path = "/home/pc/.config/hot.json"
+			local home_dir = os.getenv("HOME")
+
+			local json_path = home_dir .. "/.config/hot.json"
 
 			-- Open or create the JSON file
 			local json_file = io.open(json_path, "w")
