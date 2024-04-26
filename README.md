@@ -19,6 +19,12 @@
 
 <br>
 
+## 🎞️ DEMO
+
+[![hifi tui](https://img.youtube.com/vi/P_Jb06B_Hvg/0.jpg)](https://www.youtube.com/watch?v=P_Jb06B_Hvg)
+
+<br>
+
 ## ✨ Features
 
 - Zero Dependencies
