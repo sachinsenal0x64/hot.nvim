@@ -346,10 +346,6 @@ local function silent()
 
 					-- Access the value using the key
 					main_file = json_data.file
-
-					-- Print the value
-				else
-					print("Error: Couldn't open JSON file for reading")
 				end
 			end
 
@@ -386,7 +382,7 @@ local function silent()
 				json_file:write(json_content)
 				json_file:close()
 			else
-				print("Error: Couldn't open or write to JSON file")
+				print("Error: write to JSON file")
 				return
 			end
 
