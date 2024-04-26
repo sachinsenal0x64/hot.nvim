@@ -320,10 +320,30 @@ local function silent()
 			-- Find the main file in the root directory and its subdirectories
 			local main_file = find_main_file(root_dir, lan["ext"])
 			if not main_file then
-				vim.notify("Path not found in project directory or its subdirectories", vim.log.levels.ERROR)
-				return
+				local toml_path = "/home/pc/.config/hot.toml"
+				local toml_file = io.open(toml_path, "r")
+				if toml_file then
+					local toml_content = toml_file:read("*all")
+					local file = toml_content:match('file%s*=%s*"([^"]+)"')
+					if file then
+						main_file = file
+					else
+						vim.notify(
+							"Path not found in project directory or its subdirectories or in the TOML file",
+							vim.log.levels.ERROR
+						)
+						return
+					end
+				else
+					vim.notify(
+						"Path not found in project directory or its subdirectories and TOML file not found",
+						vim.log.levels.ERROR
+					)
+					return
+				end
 			end
 
+			local file = vim.fn.shellescape(main_file) -- Get the current file path
 			local file = vim.fn.shellescape(main_file) -- Get the current file path
 
 			local toml_path = "/home/pc/.config/hot.toml"
