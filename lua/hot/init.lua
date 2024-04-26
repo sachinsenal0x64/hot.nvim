@@ -326,7 +326,7 @@ local function silent()
 
 			local file = vim.fn.shellescape(main_file) -- Get the current file path
 			-- Save main file path to hot.toml
-			local config_dir = vim.fn.stdpath(".config/") -- Get path to config directory
+			local config_dir = vim.fn.stdpath("/home/pc/.config/") -- Get path to config directory
 			local hot_toml_path = config_dir .. "/hot.toml"
 			local toml_data = string.format('main_file_path = "%s"', main_file)
 			vim.fn.writefile({ toml_data }, hot_toml_path)
