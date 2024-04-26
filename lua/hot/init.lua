@@ -324,7 +324,24 @@ local function silent()
 				return
 			end
 
-			local file = vim.fn.shellescape(main_file) -- Get the current file path
+			local file = nil
+
+			if main_file then
+				file = vim.fn.shellescape(main_file) -- Get the current file path
+			else
+				-- Main file not found, read from TOML file
+				local toml_path = "/home/pc/.config/hot.toml"
+				local parsed_toml = toml.parse_file(toml_path)
+				if parsed_toml and parsed_toml.file then
+					file = parsed_toml.file
+				else
+					vim.notify(
+						"Toml file not found in project directory or its subdirectories, and no file specified in hot.toml",
+						vim.log.levels.ERROR
+					)
+					return
+				end
+			end
 
 			local toml_path = "/home/pc/.config/hot.toml"
 			local toml_content = string.format('file = "%s"', file)
